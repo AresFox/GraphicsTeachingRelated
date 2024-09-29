@@ -37,11 +37,15 @@ class CoordinateSystemExample(Scene):
         # )
         self.add(axes)
 
+        debug_mode = True
         # 定义n=4
         n = 4.0
         # point数组
         # 数量
-        count = 10
+        if(debug_mode):
+            count = 5
+        else:
+            count = 10
         points = []
         pointDots = []
         far = 8.0
@@ -84,7 +88,7 @@ class CoordinateSystemExample(Scene):
             color_to_paint = rgb_to_color(color_point)
             # self.play(ShowCreation(Dot(axes.c2p(point[0], point[1]), fill_color=color_to_paint, radius=0.03)), run_time=0.03)
             dot = Dot(axes.c2p(point[0], point[1]), fill_color=color_to_paint, radius=0.03)
-            show_dot_transparent = Dot(axes.c2p(point[0], point[1]), fill_color=color_to_paint, radius=0.03, fill_opacity=0.5)
+            show_dot_transparent = Dot(axes.c2p(point[0], point[1]), fill_color=color_to_paint, radius=0.03, fill_opacity=0.3)
             self.add(show_dot_transparent)
             pointDots.append(dot)
             self.add(dot)
@@ -122,20 +126,46 @@ class CoordinateSystemExample(Scene):
         dot = Dot(color=RED)
         # 画一条竖线，过（2，0）点  这是近平面
         # self.play(ShowCreation(DashedLine(axes.c2p(2, -2), axes.c2p(2, 3))))
-        self.play(ShowCreation(Line(axes.c2p(4, -2), axes.c2p(4, 2))), run_time=0.1)
+        self.play(ShowCreation(Line(axes.c2p(4, 0), axes.c2p(4, 2))), run_time=0.1)
 
         # 棱台start-------------------------------------
 
-        # 这是远平面
-        # self.play(ShowCreation(DashedLine(axes.c2p(5, -2), axes.c2p(5, 3))))
-        self.play(ShowCreation(Line(axes.c2p(8, -2), axes.c2p(8, 4))), run_time=0.1)
 
-        #画点M（8, 3）
-        self.play(ShowCreation(Dot(axes.c2p(8, 4), color=WHITE)), run_time=0.1)
+        #画点M（8, 4）
+        DotFar = Dot(axes.c2p(far,4), color=WHITE)
+        self.play(ShowCreation(DotFar), run_time=0.1)
         # 连接原点和点M（8, 3）
-        LineLengTai = Line(axes.c2p(0, 0), axes.c2p(8, 4), color=WHITE)
+        LineLengTai = Line(axes.c2p(0, 0), DotFar, color=WHITE)
         self.play(ShowCreation(LineLengTai), run_time=0.1)
         # 棱台END-------------------------------------
+
+        # 这是远平面
+        # farLine = Line(axes.c2p(far, 0), axes.c2p(far, 4), color=WHITE)
+        # self.play(ShowCreation(farLine), run_time=0.1)
+        #  #让这个是实线
+        far_line = always_redraw(lambda: axes.get_v_line(DotFar.get_bottom()))
+        self.add(far_line)
+
+        # 画底下的点
+        f0point = Dot(axes.c2p(far, 0), color=RED)
+        self.play(ShowCreation(f0point), run_time=0.1)
+        # 文字
+        f0pointText = Text("-f", font_size=20)
+        f0point1 = f0point.get_center() + np.array([-0.2, -0.0, 0])
+        f0pointText.next_to(f0point1, DOWN)
+        self.add(f0pointText)
+
+        # 画底下的点
+        C0point = Dot(axes.c2p(n, 0), color=RED)
+        self.play(ShowCreation(C0point), run_time=0.1)
+        # 文字
+        C0pointText = Text("-n", font_size=20)
+        C0point1 = C0point.get_center() + np.array([-0.2, -0.0, 0])
+        C0pointText.next_to(C0point1, DOWN)
+        self.add(C0pointText)
+        # self.play(
+        #     ShowCreation(far_line),
+        # )
 
 
         # 我们从压缩前的棱台观察体中随机取一个点$A(x,y,z)$,将它与相机连线，与近平面相交于$C(x',y',-n)$这个点上
@@ -180,18 +210,17 @@ class CoordinateSystemExample(Scene):
         # 将线段AC压缩，将其变为平行于坐标轴的线段，即旋转为lineACNEW
         # self.play(ReplacementTransform(LineAC, lineACNEW), run_time=0.6)
 
-        # 两个线段一起压缩
-        # self.play(
-        #     ReplacementTransform(LineLengTai, lineLentTaiNEW),
-        #     ReplacementTransform(LineAC, lineACNEW),
-        #     run_time=0.6
-        # )
+
+        # animation_list.append(ReplacementTransform(farLine, lineLenTaiFarNew))
+        animation_list.append(ReplacementTransform(LineLengTai, lineLentTaiNEW))
+        animation_list.append(DotFar.animate.move_to(axes.c2p(far, n / far * 4)))
 
         for i in range(len(points)):
             animation_list.append(pointDots[i].animate.move_to(axes.c2p(perspect_points[i][0], perspect_points[i][1])))
 
-        animation_list.append(ReplacementTransform(LineLengTai, lineLentTaiNEW))
+
         animation_list.append(ReplacementTransform(LineAC, lineACNEW))
+
         self.play(AnimationGroup(*animation_list), run_time=2)
 
 
@@ -210,14 +239,7 @@ class CoordinateSystemExample(Scene):
 
         # 压缩结束-------------------------------------
 
-        # 画底下的点
-        C0point = Dot(axes.c2p(n, 0), color=RED)
-        self.play(ShowCreation(C0point), run_time=0.1)
-        # 文字
-        C0pointText = Text("-n", font_size=20)
-        C0point1 = C0point.get_center() + np.array([-0.2, -0.0, 0])
-        C0pointText.next_to(C0point1, DOWN)
-        self.add(C0pointText)
+
 
 
         v_line = always_redraw(lambda: axes.get_v_line(pointA.get_bottom()))
@@ -256,11 +278,11 @@ class CoordinateSystemExample(Scene):
         # ybili = Text(r"\frac{y'}{y} = -\frac{n}{z}", font_size=20, color=WHITE, t2c={"y": RED, "n": GREEN, "z": BLUE})
         ybili = Tex("\\frac{y'}{y} = \\frac{-n}{z}", font_size=30, color=WHITE)
         # ybili = Text("y’ / y = -n / z", font_size=20)
-        ybili.next_to(axes.c2p(3, 4), DOWN)
+        ybili.next_to(axes.c2p(3, 5), DOWN)
         self.add(ybili)
 
         ybili2 = Tex("y' = -\\frac{ny}{z}", font_size=30, color=WHITE)
-        ybili2.next_to(axes.c2p(4, 3), DOWN)
+        ybili2.next_to(axes.c2p(3, 4), DOWN)
         self.add(ybili2)
 
         # ybili = MathTex(r"\frac{y'}{y} = -\frac{n}{z}")
