@@ -44,22 +44,26 @@ class CoordinateSystemExample(Scene):
         z1 = -(n+f)-n*f/(-z)
         z1=-z1
 
+        # 画棱台------------------------
+        # 棱台start-------------------------------------
+
         # Axes从CoordinateSystem类派生而来，意思是可以调用Axes.coords_to_point
         # （缩写为Axes.c2p）将一组坐标与一个点相关联，如下所示：
         dot = Dot(color=RED)
         # 画一条竖线，过（2，0）点  这是近平面
         # self.play(ShowCreation(DashedLine(axes.c2p(2, -2), axes.c2p(2, 3))))
-        self.play(ShowCreation(Line(axes.c2p(4, -2), axes.c2p(4, 2))), run_time=0.1)
-
-        # 棱台start-------------------------------------
+        # self.play(ShowCreation(Line(axes.c2p(4, -2), axes.c2p(4, 2))), run_time=0.1)
+        self.add(Line(axes.c2p(4, -2), axes.c2p(4, 2)))
 
         # 这是远平面
         # self.play(ShowCreation(DashedLine(axes.c2p(5, -2), axes.c2p(5, 3))))
-        self.play(ShowCreation(Line(axes.c2p(8, -2), axes.c2p(8, 4))), run_time=0.1)
+        # self.play(ShowCreation(Line(axes.c2p(8, -2), axes.c2p(8, 4))), run_time=0.1)
+        self.add(Line(axes.c2p(8, -2), axes.c2p(8, 4)))
 
-        #画点M（8, 3）
-        self.play(ShowCreation(Dot(axes.c2p(8, 4), color=WHITE)), run_time=0.1)
-        # 连接原点和点M（8, 3）
+        #画点M（8, 4）
+        # self.play(ShowCreation(Dot(axes.c2p(8, 4), color=WHITE)), run_time=0.1)
+        self.add(Dot(axes.c2p(8, 4), color=WHITE))
+        # 连接原点和点M（8, 4）
         LineLengTai = Line(axes.c2p(0, 0), axes.c2p(8, 4), color=WHITE)
         self.play(ShowCreation(LineLengTai), run_time=0.1)
         # 棱台END-------------------------------------

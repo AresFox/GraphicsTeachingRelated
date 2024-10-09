@@ -1,17 +1,17 @@
 
+
+
 import numpy as np
 
 from manimlib import *
 from scipy.stats import qmc
-# manimgl PerspectiveShowOnlyMorePoints.py CoordinateSystemExample
 
-class CoordinateSystemExample(Scene):
+
+class PerspectiveShowOnlyMorePoints(Scene):
 
     def clamp(self, x, min_value, max_value):
         return max(min(x, max_value), min_value)
     def construct(self):
-
-        debug_mode = False
         axes = Axes(
             # x轴的范围从-1到10，步长为1
             x_range=(-2, 8,1),
@@ -63,6 +63,7 @@ class CoordinateSystemExample(Scene):
         # 画完坐标轴了
 
 
+        debug_mode = False
         # 定义n=4
         n = 4.0
         # point数组
@@ -70,7 +71,7 @@ class CoordinateSystemExample(Scene):
         if(debug_mode):
             count = 5
         else:
-            count = 10
+            count = 15
         points = []
         pointDots = []
         far = 8.0
@@ -105,7 +106,7 @@ class CoordinateSystemExample(Scene):
             color_to_paint = rgb_to_color(color_point)
             # self.play(ShowCreation(Dot(axes.c2p(point[0], point[1]), fill_color=color_to_paint, radius=0.03)), run_time=0.03)
             dot = Dot(axes.c2p(point[0], point[1]), fill_color=color_to_paint, radius=0.03)
-            show_dot_transparent = Dot(axes.c2p(point[0], point[1]), fill_color=color_to_paint, radius=0.03, fill_opacity=0.1)
+            show_dot_transparent = Dot(axes.c2p(point[0], point[1]), fill_color=color_to_paint, radius=0.03, fill_opacity=0.2)
             self.add(show_dot_transparent)
             pointDots.append(dot)
             self.add(dot)
@@ -138,13 +139,14 @@ class CoordinateSystemExample(Scene):
         dot = Dot(color=RED)
         # 画一条竖线，过（2，0）点  这是近平面
         # self.play(ShowCreation(Line(axes.c2p(4, 0), axes.c2p(4, 2))), run_time=0.1)
-        self.add(Line(axes.c2p(n, 0), axes.c2p(n, 2)))
+        self.add(Line(axes.c2p(4, 0), axes.c2p(4, 2)))
 
         # 棱台start-------------------------------------
 
 
         #画点M（8, 4）
         DotFar = Dot(axes.c2p(far,4), color=WHITE)
+        # self.play(ShowCreation(DotFar), run_time=0.1)
         self.add(DotFar)
         # 连接原点和点M（8, 3）
         LineLengTai = Line(axes.c2p(0, 0), DotFar, color=WHITE)
@@ -180,78 +182,67 @@ class CoordinateSystemExample(Scene):
 
         # 我们从压缩前的棱台观察体中随机取一个点$A(x,y,z)$,将它与相机连线，与近平面相交于$C(x',y',-n)$这个点上
         # 画点A
-        wait_time = 0.5
-        #wait
-        self.wait(wait_time)
-        pointA = Dot(axes.c2p(z, y), color=BLUE)
-        self.play(ShowCreation(pointA), run_time=0.5)
-        # ApointText = Text("A(x,y,z)", font_size=20)
-        ApointText = Text("A(z,y)", font_size=20)
-        ApointText.next_to(pointA, RIGHT)
-        # ApointText.rotate(PI / 2, axis=RIGHT)
-        self.add(ApointText)
-
-        # 连接原点和点A（7, 2）,画出与相机连线，且画出与近平面相交的点C
-        #记录线段
-        LineAC = Line(axes.c2p(0, 0), pointA,color=BLUE)
-        self.play(ShowCreation(LineAC), run_time=0.5)
-        # lineAC虚线
-        LineAC1 = DashedLine(axes.c2p(0, 0), pointA, color=BLUE)
-        self.add(LineAC1)
-
-        pointC = Dot(axes.c2p(n, y1), color=RED)
-        self.play(ShowCreation(pointC), run_time=0.2)
-        # CpointText = Text("C(x',y',-n)", font_size=20)
-        CpointText = Text("C(-n,y')", font_size=20)
-        # CpointText.next_to(pointC, UP)
-        #Text改为在他的左上方
-        pointCLeftUp = pointC.get_center() + np.array([0.2, 0.1, 0])
-        CpointText.next_to(pointCLeftUp,LEFT)
-        self.add(CpointText)
-
-        # 画点B
-        pointBMove = Dot(axes.c2p(z,y), color=BLUE)
-        self.add(pointBMove)
-
+        # pointA = Dot(axes.c2p(z, y), color=BLUE)
+        # self.play(ShowCreation(pointA), run_time=0.1)
+        # # ApointText = Text("A(x,y,z)", font_size=20)
+        # ApointText = Text("A(z,y)", font_size=20)
+        # ApointText.next_to(pointA, RIGHT)
+        # # ApointText.rotate(PI / 2, axis=RIGHT)
+        # self.add(ApointText)
+        #
+        # # 连接原点和点A（7, 2）,画出与相机连线，且画出与近平面相交的点C
+        # #记录线段
+        # LineAC = Line(axes.c2p(0, 0), pointA,color=BLUE)
+        # self.play(ShowCreation(LineAC), run_time=0.1)
+        # # lineAC虚线
+        # LineAC1 = DashedLine(axes.c2p(0, 0), pointA, color=BLUE)
+        # self.play(ShowCreation(LineAC1), run_time=0.1)
+        #
+        # pointC = Dot(axes.c2p(n, y1), color=RED)
+        # self.play(ShowCreation(pointC), run_time=0.1)
+        # # CpointText = Text("C(x',y',-n)", font_size=20)
+        # CpointText = Text("C(-n,y')", font_size=20)
+        # # CpointText.next_to(pointC, UP)
+        # #Text改为在他的左上方
+        # pointCLeftUp = pointC.get_center() + np.array([-0.0, 0.2, 0])
+        # CpointText.next_to(pointCLeftUp,LEFT)
+        #
+        # self.add(CpointText)
         # return
         # 压缩-------------------------------------
         # 开始压缩 从透视投影压缩到正交投影
-        self.wait(wait_time)
 
         # lineLenttai变为平行于坐标轴的线段
         lineLentTaiNEW = Line(axes.c2p(0, 2), axes.c2p(8, 2), color=WHITE)
 
         # 将线段AC压缩，将其变为平行于坐标轴的线段，即旋转为与z轴平行
-        lineACNEW = Line(axes.c2p(0, y1), axes.c2p(z1, y1),color=RED)
+        # lineACNEW = Line(axes.c2p(0, y1), axes.c2p(z1, y1),color=RED)
 
 
         # animation_list.append(ReplacementTransform(farLine, lineLenTaiFarNew))
         animation_list.append(ReplacementTransform(LineLengTai, lineLentTaiNEW))
         animation_list.append(DotFar.animate.move_to(axes.c2p(far, n / far * 4)))
 
-
-
         for i in range(len(points)):
             animation_list.append(pointDots[i].animate.move_to(axes.c2p(perspect_points[i][0], perspect_points[i][1])))
 
 
-        animation_list.append(ReplacementTransform(LineAC, lineACNEW))
-        # 移动点A到B
-        animation_list.append(pointBMove.animate.move_to(axes.c2p(z1, y1)))
-        self.play(AnimationGroup(*animation_list), run_time=2)
+        # animation_list.append(ReplacementTransform(LineAC, lineACNEW))
+
+        self.play(AnimationGroup(*animation_list), run_time=3)
 
 
         # 移动points点
 
 
         # 因此点A压缩后对应的点$B(x',y',z')$的$x'$与$y'$与C是一致的。
-        # # 画点B
+        # 画点B
         # self.play(ShowCreation(Dot(axes.c2p(z1, y1), color=BLUE)), run_time=0.1)
-        # BpointText = Text("B(x',y',z')", font_size=20)
-        BpointText = Text("B(z',y')", font_size=20)
-        BpointText.next_to(axes.c2p(z1, y1), RIGHT)
-        # BpointText.rotate(PI / 2, axis=RIGHT)
-        self.add(BpointText)
+        # # BpointText = Text("B(x',y',z')", font_size=20)
+        # BpointText = Text("B(z',y')", font_size=20)
+        # BpointText.next_to(axes.c2p(z1, y1), RIGHT)
+        # # BpointText.rotate(PI / 2, axis=RIGHT)
+        # self.add(BpointText)
 
 
         # 压缩结束-------------------------------------
@@ -259,53 +250,15 @@ class CoordinateSystemExample(Scene):
 
 
 
-        v_line = always_redraw(lambda: axes.get_v_line(pointA.get_bottom()))
-        self.play(
-            ShowCreation(v_line),
-            run_time=0.1,
-        )
-
-        # 画Z，0
-        A0point = Dot(axes.c2p(z, 0), color=BLUE)
-        self.play(ShowCreation(A0point), run_time=0.1)
-        #文字
-        A0pointText = Text("z", font_size=20)
-        A0pointText.next_to(A0point,DOWN)
-        self.add(A0pointText)
-
-        self.wait(1)
-
-        # 绘制O C C0 三角形
-        if (debug_mode):
-            drawTriTime = 0.1
-        else:
-            drawTriTime = 0.8
-
-        Opoint = Dot(axes.c2p(0, 0), color=WHITE)
-        TriangleOCC0 = Polygon(axes.c2p(0, 0), axes.c2p(n, 0), axes.c2p(n, y1), color=WHITE, fill_color=BLUE, fill_opacity=0.5)
-        # TriangleOCC0 = Polygon(Opoint.__doc__, C0point.__doc__, pointC.__doc__, color=WHITE, fill_color=BLUE, fill_opacity=0.5)
-        self.play(ShowCreation(TriangleOCC0), run_time=drawTriTime)
-
-        # 绘制O A A0 三角形
-        # TriangleOAA0 = Polygon(Opoint, A0point, pointA, color=WHITE, fill_color=BLUE_C, fill_opacity=0.5)
-        TriangleOAA0 = Polygon(axes.c2p(0, 0), axes.c2p(z, 0), axes.c2p(z, y), color=WHITE, fill_color=BLUE_C, fill_opacity=0.5)
-        self.play(ShowCreation(TriangleOAA0), run_time=drawTriTime)
+        # v_line = always_redraw(lambda: axes.get_v_line(pointA.get_bottom()))
+        # self.play(
+        #     ShowCreation(v_line),
+        #     run_time=0.1,
+        # )
 
 
-        # y^\prime = -\frac{n}{z}y 写出 y’ / y = -n / z  ，用latex格式
-        # ybili = Text(r"\frac{y'}{y} = -\frac{n}{z}", font_size=20, color=WHITE, t2c={"y": RED, "n": GREEN, "z": BLUE})
-        ybili = Tex("\\frac{y'}{y} = \\frac{-n}{z}", font_size=30, color=WHITE)
-        # ybili = Text("y’ / y = -n / z", font_size=20)
-        ybili.next_to(axes.c2p(3, 5), DOWN)
-        self.play(Write(ybili), run_time=0.5)
 
-        ybili2 = Tex("y' = -\\frac{ny}{z}", font_size=30, color=WHITE)
-        ybili2.next_to(axes.c2p(3, 4), DOWN)
-        # self.add(ybili2)
-        self.play(Write(ybili2), run_time=0.5)
-
-
-        self.wait(3)
+        self.wait(1.5)
 
 
         return
